@@ -57,3 +57,11 @@ In bloquer-le-tracking-des-reseaux-sociaux, by David at 2012-11-16T10:13:08+0100
 ## Note
 
 * login_id no supported
+
+## Licence
+
+Beerware : https://en.wikipedia.org/wiki/Beerware
+
+## Author
+
+David Mercereau : http://david.mercereau.info/ http://david.mercereau.info/contact/
