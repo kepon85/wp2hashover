@@ -1,0 +1,41 @@
+<?php
+
+# Common
+
+// Db host Mysql
+$db_host='localhost';
+// Db user Mysql
+$db_user='user';
+// Db password Mysql
+$db_password='password';
+
+# Wordpress
+
+// Db name wordpress Mysql
+$wp_db='wordpress';
+// Wordpress prefix
+$wp_table_prefix='wp_';
+// Address of your wordpress site (in wp-admin/options-general.php )
+$wp_siteurl='http://david.mercereau.info/'; // With "/" to end, 
+
+# hashover
+
+// Base name hashover Mysql
+$hashover_db='hashover';
+// Folder of your hashover instance is install
+$hashover_folder='../hashover/';
+// Domain (if hashover is in multiple domain mod), if just 1 domain by default is "all"
+$hashover_domain='all';
+$hashover_notifications='yes';
+$hashover_likes=null;
+$hashover_dislikes=null;
+
+// Change Author admin name in your comment
+// Disable with : $hashover_admin_wp_authorFrom=null;
+$hashover_admin_wp_authorFrom=null;
+//~ $hashover_admin_wp_authorFrom="Admin"; // User admin in wordpress
+//~ $hashover_admin_wp_authorTo="admin"; // User admin in hashover (change)
+//~ $hashover_admin_wp_website=$wp_siteurl;  // change authorFrom with this website
+//~ $hashover_admin_wp_email='admin@you.com'; // change authorFrom with this email
+
+?>
