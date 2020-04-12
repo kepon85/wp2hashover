@@ -32,11 +32,11 @@ $wpDbConnect = new PDO('mysql:host='.$db_host.';dbname='.$wp_db.';charset=utf8',
 $hashoverDbConnect = new PDO('mysql:host='.$db_host.';dbname='.$hashover_db.';charset=utf8',$db_user,$db_password);
 
 $req = $wpDbConnect->prepare('	SELECT post_title,post_name,comment_author,comment_author_IP,comment_author_email,comment_author_url,comment_date,comment_content,comment_parent 
-				FROM wp_comments, wp_posts
-				WHERE wp_posts.ID = comment_post_ID
+				FROM '.$wp_table_prefix.'comments, '.$wp_table_prefix.'posts
+				WHERE '.$wp_table_prefix.'posts.ID = comment_post_ID
 				AND post_status = "publish"
 				AND comment_approved = 1
-				ORDER BY `wp_comments`.`comment_date`  ASC');
+				ORDER BY `'.$wp_table_prefix.'comments`.`comment_date`  ASC');
 $req->execute();
 if($req->rowCount() > 0) {
    foreach($req as $row) {
@@ -93,8 +93,8 @@ if($req->rowCount() > 0) {
 	    //~ var_dump($row['comment_parent']);
 	    // Search wordpress data with comment_parent
 	    $req3 = $wpDbConnect->prepare('  SELECT post_name,comment_author,comment_date
-					    FROM wp_comments, wp_posts
-					    WHERE wp_posts.ID = comment_post_ID
+					    FROM '.$wp_table_prefix.'comments, '.$wp_table_prefix.'posts
+					    WHERE '.$wp_table_prefix.'posts.ID = comment_post_ID
 					    AND comment_ID = '.$row['comment_parent']);
 	    $req3->execute();
 	    $wp_parent_data=$req3->fetch();
@@ -176,8 +176,8 @@ if($req->rowCount() > 0) {
 
 // ################ page-info
 $reqPosts = $wpDbConnect->prepare('SELECT post_title,post_name
-				    FROM wp_posts, wp_comments
-				    WHERE wp_posts.ID = comment_post_ID
+				    FROM '.$wp_table_prefix.'posts, '.$wp_table_prefix.'comments
+				    WHERE '.$wp_table_prefix.'posts.ID = comment_post_ID
 				    AND post_status = "publish"
 				    AND comment_approved = 1');
 $reqPosts->execute();
