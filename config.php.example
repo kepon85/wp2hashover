@@ -29,6 +29,26 @@ $hashover_domain='all';
 $hashover_notifications='yes';
 $hashover_likes=null;
 $hashover_dislikes=null;
+// Specify how your thread slug in hashover db should be.
+// Hashover creates a slug based on URL. This value should depend on how your
+// destination software is generating URLs. Generally `/`s should become `-`s
+// and don't include `/` at the end.
+// Example:
+// If your destination post URL becomes `http://example.com/2020/04/03/my-test-post`
+// make it ':year-:month-:day-:title'.
+// Supported variables:
+// - :year			Published year of posts (4-digit)
+// - :month			Published month of posts (2-digit)
+// - :i_month		Published month of posts (Without leading zeros)
+// - :day			Published day of posts (2-digit)
+// - :i_day			Published day of posts (Without leading zeros)
+// - :hour			Published hour of posts (2-digit)
+// - :minute		Published minute of posts (2-digit)
+// - :title			Filename
+// - :post_title	Post title
+// - :id			Post ID (not persistent across cache reset)
+$hashover_thread_syntax_posts=':year-:month-:day-:title';
+$hashover_thread_syntax_pages=':title';
 
 // Change Author admin name in your comment
 // Disable with : $hashover_admin_wp_authorFrom=null;
