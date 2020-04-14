@@ -190,17 +190,18 @@ if($reqPosts->rowCount() > 0) {
 	$reqPostNameDoublon->execute();
 	echo 'Add '.$row['post_name'].' page : ';
 	// If not exist
+	$datapi=array();
 	if($reqPostNameDoublon->rowCount() == 0) {
-	    $data['domain']=$hashover_domain;
-	    $data['thread']=$row['post_name'];
-	    $data['url']=$wp_siteurl.$row['post_name'].'/';
-	    $data['title']=$row['post_title'];
+	    $datapi['domain']=$hashover_domain;
+	    $datapi['thread']=$row['post_name'];
+	    $datapi['url']=$wp_siteurl.$row['post_name'].'/';
+	    $datapi['title']=$row['post_title'];
 	    $insertcmd = $hashoverDbConnect->prepare("INSERT INTO `page-info` (domain, thread, url, title) 
 						    VALUES (:domain, :thread, :url, :title)");
 						    
-	    $insertcmd->execute($data);
+	    $insertcmd->execute($datapi);
 	    //~ var_dump($insertcmd->debugDumpParams());
-	    //~ var_dump($data);
+	    //~ var_dump($datapi);
 	    echo 'Ok';
 	} else {
 	    echo '**Already registered**';
