@@ -26,12 +26,47 @@ echo "## wp2hashover ##".$jump.$jump;
 use PDO;
 use DateTime;
 
+// Generates a slug for HashOver to use based on config and post type.
+function get_thread_slug($rowdata) {
+	global $hashover_thread_syntax_posts, $hashover_thread_syntax_pages;
+	$date = strtotime($rowdata['post_date']);
+	$searches = array(
+		':year',
+		':month',
+		':i_month',
+		':day',
+		':i_day',
+		':hour',
+		':minute',
+		':title',
+		':post_title',
+		':id',
+	);
+	$replaces = array(
+		date('Y', $date),
+		date('m', $date),
+		date('n', $date),
+		date('d', $date),
+		date('j', $date),
+		date('H', $date),
+		date('i', $date),
+		$rowdata['post_name'],
+		$rowdata['post_name'],
+		$rowdata['ID'],
+	);
+	if ($rowdata['post_type'] != 'page') {
+		return str_replace($searches, $replaces, $hashover_thread_syntax_posts);
+	} else {
+		return str_replace($searches, $replaces, $hashover_thread_syntax_pages);
+	}
+}
+
 // Connect WP
 $wpDbConnect = new PDO('mysql:host='.$db_host.';dbname='.$wp_db.';charset=utf8',$db_user,$db_password);
 // Connect hashover
 $hashoverDbConnect = new PDO('mysql:host='.$db_host.';dbname='.$hashover_db.';charset=utf8',$db_user,$db_password);
 
-$req = $wpDbConnect->prepare('	SELECT post_title,post_name,comment_author,comment_author_IP,comment_author_email,comment_author_url,comment_date,comment_content,comment_parent 
+$req = $wpDbConnect->prepare('	SELECT ID,post_date,post_title,post_name,post_type,comment_author,comment_author_IP,comment_author_email,comment_author_url,comment_date,comment_content,comment_parent 
 				FROM '.$wp_table_prefix.'comments, '.$wp_table_prefix.'posts
 				WHERE '.$wp_table_prefix.'posts.ID = comment_post_ID
 				AND post_status = "publish"
@@ -44,7 +79,7 @@ if($req->rowCount() > 0) {
 	//~ var_dump($row);
 	// Prepare data for hashover DB
 	$data['domain']=$hashover_domain;
-	$data['thread']=$row['post_name'];
+	$data['thread']=get_thread_slug($row);
 	$data['body']=$row['comment_content'];
 	$data['status']=null;
 	$data['date']=date(DateTime::ISO8601, strtotime($row['comment_date']));
