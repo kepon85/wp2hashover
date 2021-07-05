@@ -47,8 +47,14 @@ $hashover_dislikes=null;
 // - :title			Filename
 // - :post_title	Post title
 // - :id			Post ID (not persistent across cache reset)
+// NOTE: Thread field doesn't have special characters like "/" or ".". It has "-" in place of them.
 $hashover_thread_syntax_posts=':year-:month-:day-:title';
 $hashover_thread_syntax_pages=':title';
+// NOTE: Url can have special characters, such as, "/" or "." as usual.
+// This is for the "page-info" table url field - for posts
+$hashover_url_syntax_posts=':year/:month/:day/:title';
+// This is for the "page-info" table url field - for pages
+$hashover_url_syntax_pages=':title';
 
 // Change Author admin name in your comment
 // Disable with : $hashover_admin_wp_authorFrom=null;

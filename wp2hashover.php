@@ -27,8 +27,7 @@ use PDO;
 use DateTime;
 
 // Generates a slug for HashOver to use based on config and post type.
-function get_thread_slug($rowdata) {
-	global $hashover_thread_syntax_posts, $hashover_thread_syntax_pages;
+function get_slug_for_db($rowdata, $post_format, $page_format) {
 	$date = strtotime($rowdata['post_date']);
 	$searches = array(
 		':year',
@@ -55,9 +54,9 @@ function get_thread_slug($rowdata) {
 		$rowdata['ID'],
 	);
 	if ($rowdata['post_type'] != 'page') {
-		return str_replace($searches, $replaces, $hashover_thread_syntax_posts);
+		return str_replace($searches, $replaces, $post_format);
 	} else {
-		return str_replace($searches, $replaces, $hashover_thread_syntax_pages);
+		return str_replace($searches, $replaces, $page_format);
 	}
 }
 
@@ -79,7 +78,7 @@ if($req->rowCount() > 0) {
 	//~ var_dump($row);
 	// Prepare data for hashover DB
 	$data['domain']=$hashover_domain;
-	$data['thread']=get_thread_slug($row);
+	$data['thread']=get_slug_for_db($row, $hashover_thread_syntax_posts, $hashover_thread_syntax_pages);
 	$data['body']=$row['comment_content'];
 	$data['status']=null;
 	$data['date']=date(DateTime::ISO8601, strtotime($row['comment_date']));
@@ -210,7 +209,7 @@ if($req->rowCount() > 0) {
 }
 
 // ################ page-info
-$reqPosts = $wpDbConnect->prepare('SELECT post_title,post_name
+$reqPosts = $wpDbConnect->prepare('SELECT post_title,post_name,post_date
 				    FROM '.$wp_table_prefix.'posts, '.$wp_table_prefix.'comments
 				    WHERE '.$wp_table_prefix.'posts.ID = comment_post_ID
 				    AND post_status = "publish"
@@ -229,7 +228,7 @@ if($reqPosts->rowCount() > 0) {
 	if($reqPostNameDoublon->rowCount() == 0) {
 	    $datapi['domain']=$hashover_domain;
 	    $datapi['thread']=$row['post_name'];
-	    $datapi['url']=$wp_siteurl.$row['post_name'].'/';
+	    $datapi['url']=$wp_siteurl.get_slug_for_db($row, $hashover_url_syntax_posts, $hashover_url_syntax_pages);
 	    $datapi['title']=$row['post_title'];
 	    $insertcmd = $hashoverDbConnect->prepare("INSERT INTO `page-info` (domain, thread, url, title) 
 						    VALUES (:domain, :thread, :url, :title)");
